@@ -1,6 +1,6 @@
 # https://github.com/terraform-providers/terraform-provider-azurerm/blob/1940d84dba45e41b2f1f868a22d7f7af1adea8a0/examples/virtual-machines/virtual_machine/vm-joined-to-active-directory/modules/active-directory/2-virtual-machine.tf
 locals {
-    custom_data_content  = file("${path.module}/../../files/winrm.ps1")
+  custom_data_content = file("${path.module}/../../files/winrm.ps1")
 }
 
 provider "azurerm" {
@@ -9,13 +9,13 @@ provider "azurerm" {
 }
 
 resource "azurerm_virtual_machine" "exchange" {
-  name = "exchange.windomain.local"
-  location = var.region
-  resource_group_name  = var.resource_group_name
+  name                  = "exchange.windomain.local"
+  location              = var.region
+  resource_group_name   = var.resource_group_name
   network_interface_ids = [azurerm_network_interface.exchange-nic.id]
   vm_size               = "Standard_D3_v2"
 
-  delete_os_disk_on_termination = true
+  delete_os_disk_on_termination = false
 
   storage_image_reference {
     publisher = "MicrosoftWindowsServer"
@@ -63,12 +63,13 @@ resource "azurerm_virtual_machine" "exchange" {
   tags = {
     role = "exchange"
   }
+  delete_data_disks_on_termination = false
 }
 
 resource "azurerm_network_interface" "exchange-nic" {
-  name = "exchange-nic"
-  location = var.region
-  resource_group_name  = var.resource_group_name
+  name                = "exchange-nic"
+  location            = var.region
+  resource_group_name = var.resource_group_name
 
   ip_configuration {
     name                          = "myNicConfiguration"
