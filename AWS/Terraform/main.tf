@@ -181,7 +181,7 @@ resource "aws_instance" "logger" {
       "sudo git clone https://github.com/clong/DetectionLab.git /opt/DetectionLab",
       "sudo chmod +x /opt/DetectionLab/Vagrant/logger_bootstrap.sh",
       "sudo sed -i 's#/vagrant/resources#/opt/DetectionLab/Vagrant/resources#g' /opt/DetectionLab/Vagrant/logger_bootstrap.sh",
-      "sudo yq eval -i 'del(.af-packet[1])' /etc/suricata/suricata.yaml", 
+      "sudo yq eval -i 'del(.af-packet[1])' /etc/suricata/suricata.yaml",
       "sudo sed -i '1s/^/\\%YAML 1.1\\n---\\n/g' /etc/suricata/suricata.yaml",
       "sudo cp /opt/DetectionLab/Vagrant/resources/fleet/fleet.service /etc/systemd/system/fleet.service && sudo systemctl daemon-reload && sudo service fleet restart",
       "sudo service suricata restart",
@@ -203,6 +203,9 @@ resource "aws_instance" "logger" {
     delete_on_termination = true
     volume_size           = 64
   }
+  tenancy                 = "dedicated"
+  disable_api_termination = true
+  monitoring              = true
 }
 
 resource "aws_instance" "dc" {
@@ -247,6 +250,9 @@ resource "aws_instance" "dc" {
   root_block_device {
     delete_on_termination = true
   }
+  tenancy                 = "dedicated"
+  disable_api_termination = true
+  monitoring              = true
 }
 
 resource "aws_instance" "wef" {
@@ -291,6 +297,9 @@ resource "aws_instance" "wef" {
   root_block_device {
     delete_on_termination = true
   }
+  tenancy                 = "dedicated"
+  disable_api_termination = true
+  monitoring              = true
 }
 
 resource "aws_instance" "win10" {
@@ -335,4 +344,7 @@ resource "aws_instance" "win10" {
   root_block_device {
     delete_on_termination = true
   }
+  tenancy                 = "dedicated"
+  disable_api_termination = true
+  monitoring              = true
 }
